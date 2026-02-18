@@ -8,4 +8,6 @@ public interface InvoiceRepository {
     List<InvoiceTotal> findInvoiceTotals();
 
     List<InvoiceTotal> findConfirmedAndPaidInvoiceTotals();
+
+    InvoiceStatusTotals computeStatusTotals();
 }
