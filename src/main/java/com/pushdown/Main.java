@@ -5,6 +5,7 @@ import com.pushdown.model.InvoiceTaxSummary;
 import com.pushdown.model.InvoiceTotal;
 import com.pushdown.repository.DataRetriever;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Main {
@@ -42,5 +43,10 @@ public class Main {
             System.out.println(invoiceTaxSummary.getInvoiceId() + " | HT " + invoiceTaxSummary.getHtValue() + " | TVA " + invoiceTaxSummary.getTaxValue() + " | TTC " + invoiceTaxSummary.getTtcValue() );
         }
 
-    }
+    System.out.println("\n===> computeWeightedTurnedoverTtc <===");
+
+        BigDecimal turnoverTtc = dataRetriever.computeWeightedTurnedoverTtc();
+
+        System.out.println("turnoverTtc = " + turnoverTtc);
+  }
 }
