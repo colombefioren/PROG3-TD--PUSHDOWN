@@ -152,6 +152,8 @@ order by i.id
         }
     }
 
+
+
     private InvoiceTotal mapResultSetToInvoiceTotal(ResultSet rs) throws SQLException {
         InvoiceTotal invoiceTotal = new InvoiceTotal();
         invoiceTotal.setId(rs.getInt("inv_id"));
