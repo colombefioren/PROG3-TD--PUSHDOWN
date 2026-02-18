@@ -116,6 +116,42 @@ order by i.id
         }
     }
 
+    @Override
+    public Double computeWeightedTurnover(){
+        String sql =
+
+                """
+                select sum(
+                    case
+                        when i.status = 'PAID' then il.unit_price * il.quantity
+                        when i.status = 'CONFIRMED' then il.unit_price * il.quantity * 0.5
+                    end
+                     ) as total
+                from invoice i
+                join invoice_line il on i.id = il.invoice_id
+                where i.status = 'CONFIRMED' or i.status = 'PAID'
+                """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = dbConnection.getDBConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            if(!rs.next()){
+                throw new RuntimeException("No invoice found");
+            }
+            return rs.getObject("total") == null ? null : rs.getDouble("total");
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get all invoice totals ",e);
+        }finally{
+            dbConnection.attemptCloseDBConnection(rs,ps,conn);
+        }
+    }
+
     private InvoiceTotal mapResultSetToInvoiceTotal(ResultSet rs) throws SQLException {
         InvoiceTotal invoiceTotal = new InvoiceTotal();
         invoiceTotal.setId(rs.getInt("inv_id"));
@@ -124,6 +160,7 @@ order by i.id
         invoiceTotal.setTotal(rs.getDouble("inv_total"));
         return invoiceTotal;
     }
+
     private InvoiceStatusTotals mapResultSetToInvoiceStatusTotal(ResultSet rs) throws SQLException {
         InvoiceStatusTotals invoiceStatusTotals = new InvoiceStatusTotals();
      while(rs.next()){

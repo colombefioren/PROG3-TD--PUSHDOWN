@@ -11,4 +11,6 @@ public interface InvoiceRepository {
     List<InvoiceTotal> findConfirmedAndPaidInvoiceTotals();
 
     InvoiceStatusTotals computeStatusTotals();
+
+    Double computeWeightedTurnover();
 }
