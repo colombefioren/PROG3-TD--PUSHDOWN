@@ -107,12 +107,8 @@ order by i.id
             conn = dbConnection.getDBConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-            List<InvoiceStatusTotals> invoiceStatusTotals = new ArrayList<InvoiceStatusTotals>();
-            while(rs.next()){
-                invoiceStatusTotals.add(mapResultSetToInvoiceStatusTotal(rs));
-            }
 
-            return invoiceStatusTotals;
+            return mapResultSetToInvoiceStatusTotal(rs);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to get all invoice totals ",e);
         }finally{
@@ -127,5 +123,20 @@ order by i.id
         invoiceTotal.setStatus(Status.valueOf(rs.getString("inv_status")));
         invoiceTotal.setTotal(rs.getDouble("inv_total"));
         return invoiceTotal;
+    }
+    private InvoiceStatusTotals mapResultSetToInvoiceStatusTotal(ResultSet rs) throws SQLException {
+        InvoiceStatusTotals invoiceStatusTotals = new InvoiceStatusTotals();
+     while(rs.next()){
+         if(Status.valueOf(rs.getString("inv_status")).equals(Status.CONFIRMED)){
+             invoiceStatusTotals.setConfirmedTotal(rs.getDouble("inv_total"));
+         }
+         else if(Status.valueOf(rs.getString("inv_status")).equals(Status.PAID)){
+             invoiceStatusTotals.setPaidTotal(rs.getDouble("inv_total"));
+         }else if (Status.valueOf(rs.getString("inv_status")).equals(Status.DRAFT))){
+             invoiceStatusTotals.setDraftTotal(rs.getDouble("inv_total"));
+         }
+
+     }
+     return invoiceStatusTotals;
     }
 }
