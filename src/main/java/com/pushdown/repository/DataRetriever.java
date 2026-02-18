@@ -2,11 +2,13 @@ package com.pushdown.repository;
 
 import com.pushdown.db.DBConnection;
 import com.pushdown.model.InvoiceTotal;
+import com.pushdown.model.Status;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataRetriever implements InvoiceRepository{
@@ -22,8 +24,11 @@ public class DataRetriever implements InvoiceRepository{
        String sql =
 
 """
-select i.id, i.customer_name, i.status, sum(il.unit_price * il.quantity) as total
-
+select i.id as inv_id, i.customer_name as inv_customer_name, i.status as inv_status, sum(il.unit_price * il.quantity) as inv_total
+from invoice i
+join invoice_line il on i.id = il.invoice_id
+group by i.id
+order by i.id
 """;
 
     Connection conn = null;
@@ -32,11 +37,23 @@ select i.id, i.customer_name, i.status, sum(il.unit_price * il.quantity) as tota
 
     try{
         conn = dbConnection.getDBConnection();
+        ps = conn.prepareStatement(sql);
+        rs = ps.executeQuery();
+        List<InvoiceTotal> invoiceTotals = new ArrayList<InvoiceTotal>();
+        while(rs.next()){
+            InvoiceTotal invoiceTotal = new InvoiceTotal();
+            invoiceTotal.setId(rs.getInt("inv_id"));
+            invoiceTotal.setCustomerName(rs.getString("inv_customer_name"));
+            invoiceTotal.setStatus(Status.valueOf(rs.getString("inv_status")));
+            invoiceTotal.setTotal(rs.getDouble("inv_total"));
+            invoiceTotals.add(invoiceTotal);
+        }
+
+        return invoiceTotals;
     } catch (SQLException e) {
         throw new RuntimeException("Failed to get all invoice totals ",e);
     }finally{
         dbConnection.attemptCloseDBConnection(rs,ps,conn);
     }
-
     }
 }
