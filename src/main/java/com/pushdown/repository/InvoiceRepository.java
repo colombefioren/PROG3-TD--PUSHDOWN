@@ -4,6 +4,7 @@ import com.pushdown.model.InvoiceStatusTotals;
 import com.pushdown.model.InvoiceTaxSummary;
 import com.pushdown.model.InvoiceTotal;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface InvoiceRepository {
@@ -16,4 +17,6 @@ public interface InvoiceRepository {
     Double computeWeightedTurnover();
 
     List<InvoiceTaxSummary> findInvoiceTaxSummaries();
+
+    BigDecimal computeWeightedTurnedoverTtc();
 }

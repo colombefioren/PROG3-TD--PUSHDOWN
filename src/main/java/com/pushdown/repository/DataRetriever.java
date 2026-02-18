@@ -6,6 +6,7 @@ import com.pushdown.model.InvoiceTaxSummary;
 import com.pushdown.model.InvoiceTotal;
 import com.pushdown.model.Status;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -181,6 +182,11 @@ order by i.id
      }finally{
          dbConnection.attemptCloseDBConnection(rs,ps,conn);
      }
+    }
+
+    @Override
+    public BigDecimal computeWeightedTurnedoverTtc(){
+
     }
 
 
