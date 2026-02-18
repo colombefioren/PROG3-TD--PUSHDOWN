@@ -2,6 +2,7 @@ package com.pushdown.repository;
 
 import com.pushdown.db.DBConnection;
 import com.pushdown.model.InvoiceStatusTotals;
+import com.pushdown.model.InvoiceTaxSummary;
 import com.pushdown.model.InvoiceTotal;
 import com.pushdown.model.Status;
 
@@ -152,6 +153,10 @@ order by i.id
         }
     }
 
+    @Override
+    public List<InvoiceTaxSummary> findInvoiceTaxSummaries(){
+
+    }
 
 
     private InvoiceTotal mapResultSetToInvoiceTotal(ResultSet rs) throws SQLException {

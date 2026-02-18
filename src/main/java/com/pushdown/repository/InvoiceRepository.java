@@ -1,6 +1,7 @@
 package com.pushdown.repository;
 
 import com.pushdown.model.InvoiceStatusTotals;
+import com.pushdown.model.InvoiceTaxSummary;
 import com.pushdown.model.InvoiceTotal;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface InvoiceRepository {
     InvoiceStatusTotals computeStatusTotals();
 
     Double computeWeightedTurnover();
+
+    List<InvoiceTaxSummary> findInvoiceTaxSummaries()
 }
