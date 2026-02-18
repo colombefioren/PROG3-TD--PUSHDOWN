@@ -24,7 +24,7 @@ public class Main {
     System.out.println("\n===> findConfirmedAndPaidInvoicesTotals <===");
     List<InvoiceTotal> confirmedAndPaidInvoiceTotals = dataRetriever.findConfirmedAndPaidInvoiceTotals();
 
-        for (InvoiceTotal invoiceTotal : invoiceTotals) {
+        for (InvoiceTotal invoiceTotal : confirmedAndPaidInvoiceTotals) {
             System.out.println(invoiceTotal.getId() + " | " + invoiceTotal.getCustomerName() + " | " + invoiceTotal.getStatus() + " | " +  invoiceTotal.getTotal());
         }
 
