@@ -6,6 +6,7 @@ import com.pushdown.model.InvoiceTotal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class DataRetriever implements InvoiceRepository{
@@ -18,7 +19,11 @@ public class DataRetriever implements InvoiceRepository{
 
     @Override
     public List<InvoiceTotal> findInvoiceTotals() {
-       String sql = """
+       String sql =
+
+"""
+select i.id, i.customer_name, i.status, sum(il.unit_price * il.quantity) as total
+
 """;
 
     Connection conn = null;
@@ -26,7 +31,11 @@ public class DataRetriever implements InvoiceRepository{
     ResultSet rs = null;
 
     try{
-        conn = db
+        conn = dbConnection.getDBConnection();
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to get all invoice totals ",e);
+    }finally{
+        dbConnection.attemptCloseDBConnection(rs,ps,conn);
     }
 
     }
