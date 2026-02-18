@@ -107,12 +107,12 @@ order by i.id
             conn = dbConnection.getDBConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-            List<InvoiceTotal> invoiceTotals = new ArrayList<InvoiceTotal>();
+            List<InvoiceStatusTotals> invoiceStatusTotals = new ArrayList<InvoiceStatusTotals>();
             while(rs.next()){
-                invoiceTotals.add(mapResultSetToInvoiceTotal(rs));
+                invoiceStatusTotals.add(mapResultSetToInvoiceStatusTotal(rs));
             }
 
-            return invoiceTotals;
+            return invoiceStatusTotals;
         } catch (SQLException e) {
             throw new RuntimeException("Failed to get all invoice totals ",e);
         }finally{

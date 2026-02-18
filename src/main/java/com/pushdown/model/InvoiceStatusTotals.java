@@ -3,51 +3,61 @@ package com.pushdown.model;
 import java.util.Objects;
 
 public class InvoiceStatusTotals {
-    private Status status;
-    private Double total;
+    private Double PaidTotal;
+    private Double ConfirmedTotal;
+    private Double DraftTotal;
 
     public InvoiceStatusTotals() {
     }
 
-    public InvoiceStatusTotals(Status status, Double total) {
-        this.status = status;
-        this.total = total;
+    public InvoiceStatusTotals(Double paidTotal, Double confirmedTotal, Double draftTotal) {
+        PaidTotal = paidTotal;
+        ConfirmedTotal = confirmedTotal;
+        DraftTotal = draftTotal;
     }
 
-    public Status getStatus() {
-        return status;
+    public Double getPaidTotal() {
+        return PaidTotal;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setPaidTotal(Double paidTotal) {
+        PaidTotal = paidTotal;
     }
 
-    public Double getTotal() {
-        return total;
+    public Double getConfirmedTotal() {
+        return ConfirmedTotal;
     }
 
-    public void setTotal(Double total) {
-        this.total = total;
+    public void setConfirmedTotal(Double confirmedTotal) {
+        ConfirmedTotal = confirmedTotal;
+    }
+
+    public Double getDraftTotal() {
+        return DraftTotal;
+    }
+
+    public void setDraftTotal(Double draftTotal) {
+        DraftTotal = draftTotal;
     }
 
     @Override
     public boolean equals(Object o) {
-
         if (o == null || getClass() != o.getClass()) return false;
         InvoiceStatusTotals that = (InvoiceStatusTotals) o;
-        return status == that.status && Objects.equals(total, that.total);
+        return Objects.equals(PaidTotal, that.PaidTotal) && Objects.equals(ConfirmedTotal, that.ConfirmedTotal) && Objects.equals(DraftTotal, that.DraftTotal);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(status, total);
+        return Objects.hash(PaidTotal, ConfirmedTotal, DraftTotal);
     }
 
     @Override
     public String toString() {
         return "InvoiceStatusTotals{" +
-                "status=" + status +
-                ", total=" + total +
+                "PaidTotal=" + PaidTotal +
+                ", ConfirmedTotal=" + ConfirmedTotal +
+                ", DraftTotal=" + DraftTotal +
                 '}';
     }
 }
