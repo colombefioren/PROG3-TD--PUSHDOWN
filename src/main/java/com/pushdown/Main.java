@@ -16,12 +16,17 @@ public class Main {
 
     List<InvoiceTotal> invoiceTotals = dataRetriever.findInvoiceTotals();
 
-    System.out.println(invoiceTotals);
+    for (InvoiceTotal invoiceTotal : invoiceTotals) {
+      System.out.println(invoiceTotal.getId() + " | " + invoiceTotal.getCustomerName() + " | " + invoiceTotal.getTotal());
+    }
+
 
     System.out.println("\n===> findConfirmedAndPaidInvoicesTotals <===");
     List<InvoiceTotal> confirmedAndPaidInvoiceTotals = dataRetriever.findConfirmedAndPaidInvoiceTotals();
 
-    System.out.println(confirmedAndPaidInvoiceTotals);
+        for (InvoiceTotal invoiceTotal : invoiceTotals) {
+            System.out.println(invoiceTotal.getId() + " | " + invoiceTotal.getCustomerName() + " | " + invoiceTotal.getStatus() + " | " +  invoiceTotal.getTotal());
+        }
 
     System.out.println("\n===> computeStatusTotal <===");
 
