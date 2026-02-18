@@ -132,7 +132,7 @@ order by i.id
          }
          else if(Status.valueOf(rs.getString("inv_status")).equals(Status.PAID)){
              invoiceStatusTotals.setPaidTotal(rs.getDouble("inv_total"));
-         }else if (Status.valueOf(rs.getString("inv_status")).equals(Status.DRAFT))){
+         }else if (Status.valueOf(rs.getString("inv_status")).equals(Status.DRAFT)){
              invoiceStatusTotals.setDraftTotal(rs.getDouble("inv_total"));
          }
 
