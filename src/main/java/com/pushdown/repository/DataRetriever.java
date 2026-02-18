@@ -155,7 +155,32 @@ order by i.id
 
     @Override
     public List<InvoiceTaxSummary> findInvoiceTaxSummaries(){
+     String sql = """
+    select i.id as inv_id, sum(il.unit_price * il.quantity) as ht_total, sum(il.unit_price * il.quantity * 0.2) as ht_tax, sum(il.unit_price * il.quantity * 1.2) as ttc_total
+    from invoice i
+    join invoice_line il on i.id = il.invoice_id
+    group by i.id
+    order by i.id
+""";
 
+     Connection conn = null;
+     PreparedStatement ps = null;
+     ResultSet rs = null;
+
+     try{
+         conn = dbConnection.getDBConnection();
+         ps = conn.prepareStatement(sql);
+         rs = ps.executeQuery();
+         List<InvoiceTaxSummary> invoiceTaxSummaries = new ArrayList<>();
+         while(rs.next()){
+             invoiceTaxSummaries.add(mapResultSetToInvoiceTaxSummary(rs));
+         }
+         return invoiceTaxSummaries;
+     } catch (SQLException e) {
+         throw new RuntimeException(e);
+     }finally{
+         dbConnection.attemptCloseDBConnection(rs,ps,conn);
+     }
     }
 
 
@@ -182,5 +207,14 @@ order by i.id
 
      }
      return invoiceStatusTotals;
+    }
+
+    private InvoiceTaxSummary mapResultSetToInvoiceTaxSummary(ResultSet rs) throws SQLException {
+        InvoiceTaxSummary invoiceTaxSummary = new InvoiceTaxSummary();
+        invoiceTaxSummary.setInvoiceId(rs.getInt("inv_id"));
+        invoiceTaxSummary.setTaxValue(rs.getDouble("ht_tax"));
+        invoiceTaxSummary.setTaxValue(rs.getDouble("ht_total"));
+        invoiceTaxSummary.setTtcValue(rs.getDouble("ttc_total"));
+        return invoiceTaxSummary;
     }
 }

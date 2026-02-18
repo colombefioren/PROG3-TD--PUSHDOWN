@@ -15,5 +15,5 @@ public interface InvoiceRepository {
 
     Double computeWeightedTurnover();
 
-    List<InvoiceTaxSummary> findInvoiceTaxSummaries()
+    List<InvoiceTaxSummary> findInvoiceTaxSummaries();
 }
