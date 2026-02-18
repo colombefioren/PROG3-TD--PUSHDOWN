@@ -41,12 +41,7 @@ order by i.id
         rs = ps.executeQuery();
         List<InvoiceTotal> invoiceTotals = new ArrayList<InvoiceTotal>();
         while(rs.next()){
-            InvoiceTotal invoiceTotal = new InvoiceTotal();
-            invoiceTotal.setId(rs.getInt("inv_id"));
-            invoiceTotal.setCustomerName(rs.getString("inv_customer_name"));
-            invoiceTotal.setStatus(Status.valueOf(rs.getString("inv_status")));
-            invoiceTotal.setTotal(rs.getDouble("inv_total"));
-            invoiceTotals.add(invoiceTotal);
+            invoiceTotals.add(mapResultSetToInvoiceTotal(rs));
         }
 
         return invoiceTotals;
@@ -55,5 +50,14 @@ order by i.id
     }finally{
         dbConnection.attemptCloseDBConnection(rs,ps,conn);
     }
+    }
+
+    private InvoiceTotal mapResultSetToInvoiceTotal(ResultSet rs) throws SQLException {
+        InvoiceTotal invoiceTotal = new InvoiceTotal();
+        invoiceTotal.setId(rs.getInt("inv_id"));
+        invoiceTotal.setCustomerName(rs.getString("inv_customer_name"));
+        invoiceTotal.setStatus(Status.valueOf(rs.getString("inv_status")));
+        invoiceTotal.setTotal(rs.getDouble("inv_total"));
+        return invoiceTotal;
     }
 }
