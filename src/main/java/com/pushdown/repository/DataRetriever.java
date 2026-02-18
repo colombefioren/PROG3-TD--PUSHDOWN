@@ -1,6 +1,7 @@
 package com.pushdown.repository;
 
 import com.pushdown.db.DBConnection;
+import com.pushdown.model.InvoiceStatusTotals;
 import com.pushdown.model.InvoiceTotal;
 import com.pushdown.model.Status;
 
@@ -63,6 +64,39 @@ order by i.id
                 where i.status = 'CONFIRMED' or i.status = 'PAID'
                 group by i.id
                 order by i.id
+                """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = dbConnection.getDBConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            List<InvoiceTotal> invoiceTotals = new ArrayList<InvoiceTotal>();
+            while(rs.next()){
+                invoiceTotals.add(mapResultSetToInvoiceTotal(rs));
+            }
+
+            return invoiceTotals;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get all invoice totals ",e);
+        }finally{
+            dbConnection.attemptCloseDBConnection(rs,ps,conn);
+        }
+    }
+
+    @Override
+    public InvoiceStatusTotals computeStatusTotals() {
+        String sql =
+
+                """
+                select i.status as inv_status, sum(il.unit_price * il.quantity) as inv_total
+                from invoice i
+                join invoice_line il on i.id = il.invoice_id
+                group by i.status
+                order by inv_total desc
                 """;
 
         Connection conn = null;

@@ -1,5 +1,6 @@
 package com.pushdown.repository;
 
+import com.pushdown.model.InvoiceStatusTotals;
 import com.pushdown.model.InvoiceTotal;
 
 import java.util.List;

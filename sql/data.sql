@@ -9,3 +9,6 @@ insert into invoice_line (invoice_id, label,quantity, unit_price) values
  (2,'Produit A',5,100),
  (2,'Service C',1,200),
  (3,'Produit B',3,50);
+
+select setval('invoice_id_seq',(select max(id) from invoice));
+select setval('invoice_line_id_seq ',(select max(id) from invoice_line) )
