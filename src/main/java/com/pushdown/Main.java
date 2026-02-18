@@ -1,6 +1,7 @@
 package com.pushdown;
 
 import com.pushdown.model.InvoiceStatusTotals;
+import com.pushdown.model.InvoiceTaxSummary;
 import com.pushdown.model.InvoiceTotal;
 import com.pushdown.repository.DataRetriever;
 
@@ -32,5 +33,14 @@ public class Main {
         System.out.println("total_paid = " + totalPaid);
         System.out.println("total_confirmed = " + totalConfirmed);
         System.out.println("total_draft = " + totalDraft);
-  }
+
+        System.out.println("\n===> findInvoiceTaxSummaries <===");
+
+        List<InvoiceTaxSummary> invoiceTaxSummaries = dataRetriever.findInvoiceTaxSummaries();
+
+        for (InvoiceTaxSummary invoiceTaxSummary : invoiceTaxSummaries) {
+            System.out.println(invoiceTaxSummary.getInvoiceId() + " | HT " + invoiceTaxSummary.getHtValue() + " | TVA " + invoiceTaxSummary.getTaxValue() + " | TTC " + invoiceTaxSummary.getTtcValue() );
+        }
+
+    }
 }

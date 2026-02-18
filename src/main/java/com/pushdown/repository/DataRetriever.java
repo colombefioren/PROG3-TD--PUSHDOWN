@@ -213,7 +213,7 @@ order by i.id
         InvoiceTaxSummary invoiceTaxSummary = new InvoiceTaxSummary();
         invoiceTaxSummary.setInvoiceId(rs.getInt("inv_id"));
         invoiceTaxSummary.setTaxValue(rs.getDouble("ht_tax"));
-        invoiceTaxSummary.setTaxValue(rs.getDouble("ht_total"));
+        invoiceTaxSummary.setHtValue(rs.getDouble("ht_total"));
         invoiceTaxSummary.setTtcValue(rs.getDouble("ttc_total"));
         return invoiceTaxSummary;
     }
