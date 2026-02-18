@@ -35,7 +35,13 @@ public class Main {
         System.out.println("total_confirmed = " + totalConfirmed);
         System.out.println("total_draft = " + totalDraft);
 
-        System.out.println("\n===> findInvoiceTaxSummaries <===");
+    System.out.println("\n===> computeWeightedTurnover <===");
+
+    Double turnover = dataRetriever.computeWeightedTurnover();
+
+    System.out.println("turnover = " + turnover);
+
+    System.out.println("\n===> findInvoiceTaxSummaries <===");
 
         List<InvoiceTaxSummary> invoiceTaxSummaries = dataRetriever.findInvoiceTaxSummaries();
 
