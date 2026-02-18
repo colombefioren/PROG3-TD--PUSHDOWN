@@ -52,6 +52,40 @@ order by i.id
     }
     }
 
+    @Override
+    public List<InvoiceTotal> findConfirmedAndPaidInvoiceTotals() {
+        String sql =
+
+                """
+                select i.id as inv_id, i.customer_name as inv_customer_name, i.status as inv_status, sum(il.unit_price * il.quantity) as inv_total
+                from invoice i
+                join invoice_line il on i.id = il.invoice_id
+                where i.status = 'CONFIRMED' or i.status = 'PAID'
+                group by i.id
+                order by i.id
+                """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = dbConnection.getDBConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            List<InvoiceTotal> invoiceTotals = new ArrayList<InvoiceTotal>();
+            while(rs.next()){
+                invoiceTotals.add(mapResultSetToInvoiceTotal(rs));
+            }
+
+            return invoiceTotals;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get all invoice totals ",e);
+        }finally{
+            dbConnection.attemptCloseDBConnection(rs,ps,conn);
+        }
+    }
+
     private InvoiceTotal mapResultSetToInvoiceTotal(ResultSet rs) throws SQLException {
         InvoiceTotal invoiceTotal = new InvoiceTotal();
         invoiceTotal.setId(rs.getInt("inv_id"));

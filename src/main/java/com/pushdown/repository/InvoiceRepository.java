@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface InvoiceRepository {
     List<InvoiceTotal> findInvoiceTotals();
+
+    List<InvoiceTotal> findConfirmedAndPaidInvoiceTotals();
 }
