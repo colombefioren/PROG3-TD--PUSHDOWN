@@ -186,6 +186,38 @@ order by i.id
 
     @Override
     public BigDecimal computeWeightedTurnedoverTtc(){
+        String sql =
+
+                """
+                select sum(
+                    case
+                        when i.status = 'PAID' then il.unit_price * il.quantity * 1.2
+                        when i.status = 'CONFIRMED' then il.unit_price * il.quantity * 0.5 * 1.2
+                    end
+                     ) as total
+                from invoice i
+                join invoice_line il on i.id = il.invoice_id
+                where i.status = 'CONFIRMED' or i.status = 'PAID'
+                """;
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = dbConnection.getDBConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if(!rs.next()){
+                throw new RuntimeException("No invoice found");
+            }
+
+            return rs.getObject("total") == null ? null : rs.getBigDecimal("total");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally{
+            dbConnection.attemptCloseDBConnection(rs,ps,conn);
+        }
 
     }
 
