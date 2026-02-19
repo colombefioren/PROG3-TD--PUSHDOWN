@@ -91,7 +91,7 @@ order by i.id
 
     @Override
     public InvoiceStatusTotals computeStatusTotals() {
-        String sql =
+        String sql1 =
 
                 """
                 select i.status as inv_status, sum(il.unit_price * il.quantity) as inv_total
@@ -100,6 +100,15 @@ order by i.id
                 group by i.status
                 order by inv_total desc
                 """;
+
+        String sql = """
+        select
+        coalesce(sum(case when i.status = 'PAID' then il.unit_price * il.quantity end),0) as paid_total,
+        coalesce(sum(case when i.status = 'CONFIRMED' then il.unit_price * il.quantity end),0) as confirmed_total,
+        coalesce(sum(case when i.status = 'DRAFT' then il.unit_price * il.quantity end),0) as draft_total
+        from invoice i
+        join invoice_line il on i.id = il.invoice_id
+""";
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -235,18 +244,10 @@ order by i.id
 
     private InvoiceStatusTotals mapResultSetToInvoiceStatusTotal(ResultSet rs) throws SQLException {
         InvoiceStatusTotals invoiceStatusTotals = new InvoiceStatusTotals();
-     while(rs.next()){
-         if(Status.valueOf(rs.getString("inv_status")).equals(Status.CONFIRMED)){
-             invoiceStatusTotals.setConfirmedTotal(rs.getDouble("inv_total"));
-         }
-         else if(Status.valueOf(rs.getString("inv_status")).equals(Status.PAID)){
-             invoiceStatusTotals.setPaidTotal(rs.getDouble("inv_total"));
-         }else if (Status.valueOf(rs.getString("inv_status")).equals(Status.DRAFT)){
-             invoiceStatusTotals.setDraftTotal(rs.getDouble("inv_total"));
-         }
-
-     }
-     return invoiceStatusTotals;
+             invoiceStatusTotals.setConfirmedTotal(rs.getDouble("confirmed_total"));
+             invoiceStatusTotals.setPaidTotal(rs.getDouble("paid_total"));
+             invoiceStatusTotals.setDraftTotal(rs.getDouble("draft_total"));
+             return invoiceStatusTotals;
     }
 
     private InvoiceTaxSummary mapResultSetToInvoiceTaxSummary(ResultSet rs) throws SQLException {
