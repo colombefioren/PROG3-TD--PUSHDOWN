@@ -118,7 +118,9 @@ order by i.id
             conn = dbConnection.getDBConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-
+            if(!rs.next()){
+                throw new IllegalArgumentException("No total found");
+            }
             return mapResultSetToInvoiceStatusTotal(rs);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to get all invoice totals ",e);
