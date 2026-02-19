@@ -157,9 +157,10 @@ order by i.id
     @Override
     public List<InvoiceTaxSummary> findInvoiceTaxSummaries(){
      String sql = """
-    select i.id as inv_id, sum(il.unit_price * il.quantity) as ht_total, sum(il.unit_price * il.quantity * 0.2) as ht_tax, sum(il.unit_price * il.quantity * 1.2) as ttc_total
+    select i.id as inv_id, sum(il.unit_price * il.quantity) as ht_total, sum(il.unit_price * il.quantity * (tc.rate / 100)) as ht_tax, sum(il.unit_price * il.quantity * (1 + (tc.rate /100))) as ttc_total
     from invoice i
     join invoice_line il on i.id = il.invoice_id
+    join tax_config tc on tc.id = i.tax_config_id
     group by i.id
     order by i.id
 """;
@@ -191,12 +192,13 @@ order by i.id
                 """
                 select sum(
                     case
-                        when i.status = 'PAID' then il.unit_price * il.quantity * 1.2
-                        when i.status = 'CONFIRMED' then il.unit_price * il.quantity * 0.5 * 1.2
+                        when i.status = 'PAID' then il.unit_price * il.quantity * (1 + (tc.rate / 100))
+                        when i.status = 'CONFIRMED' then il.unit_price * il.quantity * 0.5 * (1 + (tc.rate / 100))
                     end
                      ) as total
                 from invoice i
                 join invoice_line il on i.id = il.invoice_id
+                join tax_config tc on tc.id = i.tax_config_id
                 where i.status = 'CONFIRMED' or i.status = 'PAID'
                 """;
 
